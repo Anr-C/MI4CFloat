@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_layout"
+    android:onClick="FinishActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <com.lckiss.floatMi4c.widget.ClipRevealFrame
+      android:id="@+id/menu_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="invisible"
+      android:layout_centerHorizontal="true"
+      >
+
+    <com.ogaclejapan.arclayout.ArcLayout
+        android:id="@+id/arc_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:arc_axisRadius="@dimen/layout_child_offset_tumblr"
+        app:arc_origin="center"
+        app:arc_radius="@dimen/layout_radius_tumblr"
+        >
+
+      <Button
+          android:id="@+id/menu_one"
+          style="@style/Tumblr"
+          android:background="@drawable/tumblr_orange_oval"
+          android:text="待机"
+          />
+
+      <Button
+          android:id="@+id/menu_two"
+          style="@style/Tumblr"
+          android:background="@drawable/tumblr_green_oval"
+          android:text="轻聊"
+          />
+
+      <Button
+          android:id="@+id/menu_three"
+          style="@style/Tumblr"
+          android:background="@drawable/tumblr_white_oval"
+          android:text="影音"
+          />
+
+      <Button
+          android:id="@+id/menu_four"
+          style="@style/Tumblr"
+          android:background="@drawable/tumblr_grey_oval"
+          android:text="畅玩"
+          />
+
+      <Button
+          android:id="@+id/menu_five"
+          style="@style/Tumblr"
+          android:background="@drawable/tumblr_blue_oval"
+          android:text="动态"
+          />
+
+    </com.ogaclejapan.arclayout.ArcLayout>
+
+    <Button
+        android:id="@+id/center_item"
+        style="@style/Tumblr"
+        android:layout_gravity="center"
+        android:background="@drawable/tumblr_red_oval"
+        android:text="性能"
+        />
+
+  </com.lckiss.floatMi4c.widget.ClipRevealFrame>
+</RelativeLayout>
