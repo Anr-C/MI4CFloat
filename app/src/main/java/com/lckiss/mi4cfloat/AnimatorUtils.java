@@ -1,9 +1,8 @@
-package com.lckiss.floatMi4c;
+package com.lckiss.mi4cfloat;
 
 import android.animation.PropertyValuesHolder;
 
 public class AnimatorUtils {
-
   public static final String ROTATION = "rotation";
   public static final String SCALE_X = "scaleX";
   public static final String SCALE_Y = "scaleY";

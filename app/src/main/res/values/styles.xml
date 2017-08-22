@@ -19,7 +19,7 @@
     </style>
 
 
-    <style name="MyDialog" parent="android:style/Theme.Dialog">
+    <style name="MyDialog" parent="Theme.AppCompat.Light.Dialog">
         <!-- 背景颜色及透明程度  -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <!--  是否有标题  -->
@@ -28,15 +28,7 @@
         <item name="android:windowIsFloating">true</item>
         <!-- 是否模糊  -->
         <item name="android:backgroundDimEnabled">false</item>
-        <!--进入动画-->
-        <item name="android:windowEnterAnimation">@anim/dialog_in_anim</item>
-        <!--退出动画-->
-        <item name="android:windowExitAnimation">@anim/dialog_out_anim</item>
-
-        <item name="android:activityCloseEnterAnimation">@anim/dialog_in_anim</item>
-        <item name="android:activityCloseExitAnimation">@anim/dialog_out_anim</item>
-        <item name="android:activityOpenEnterAnimation">@anim/dialog_in_anim</item>
-        <item name="android:activityOpenExitAnimation">@anim/dialog_out_anim</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
-
 </resources>

@@ -1,4 +1,4 @@
-package com.lckiss.floatMi4c.widget;
+package com.lckiss.mi4cfloat.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
  * https://gist.github.com/schwiz/e566f248723bb1754972
  */
 public class ClipRevealFrame extends FrameLayout {
-
   boolean clipOutlines;
   float centerX;
   float centerY;

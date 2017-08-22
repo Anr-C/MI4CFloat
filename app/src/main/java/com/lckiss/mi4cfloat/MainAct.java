@@ -1,23 +1,23 @@
-package com.lckiss.floatMi4c;
+package com.lckiss.mi4cfloat;
+
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
-import com.lckiss.floatMi4c.widget.ClipRevealFrame;
+import com.lckiss.mi4cfloat.widget.ClipRevealFrame;
 import com.ogaclejapan.arclayout.ArcLayout;
 
 import java.io.BufferedReader;
@@ -30,22 +30,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class FloatMainService extends Activity implements View.OnClickListener {
+public class MainAct extends AppCompatActivity implements View.OnClickListener {
 
-    View rootLayout;
-    ClipRevealFrame menuLayout;
-    ArcLayout arcLayout;
-    View centerItem;
+    private View rootLayout;
+    private ClipRevealFrame menuLayout;
+    private ArcLayout arcLayout;
+    private View centerItem;
+    private ExecutorService cachedThreadPool;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setFinishOnTouchOutside(true);
-
-        setContentView(R.layout.like_a_tumblr);
-        //设置statusBar透明
-        StatusBarUtils.setColor(this, 0000);
+        setContentView(R.layout.activity_main);
 
         rootLayout = findViewById(R.id.root_layout);
         menuLayout = (ClipRevealFrame) findViewById(R.id.menu_layout);
@@ -55,35 +54,41 @@ public class FloatMainService extends Activity implements View.OnClickListener {
         for (int i = 0, size = arcLayout.getChildCount(); i < size; i++) {
             arcLayout.getChildAt(i).setOnClickListener(this);
         }
+        cachedThreadPool = Executors.newCachedThreadPool();
+        isFirst();
+        onShowMenu(arcLayout);
 
+    }
 
-        String M = "CheckFirst";
-        SharedPreferences setting = getSharedPreferences(M, 0);
-        Boolean user_first = setting.getBoolean("FIRST", true);
-        if (user_first) {//第一次
-            setting.edit().putBoolean("FIRST", false).commit();
-
+    private void isFirst() {
+        final SharedPreferences sp = getSharedPreferences("key", MODE_PRIVATE);
+        Boolean isFirst = sp.getBoolean("FIRST", false);
+        if (!isFirst) {
             new AlertDialog.Builder(this)
-                    // .setIcon(R.mipmap.ic_launcher)
-                    .// 图标
-                    setTitle("骚年，第一次吧！")
-                    .// 标题
-                    setMessage("第一次使用将释放配置文件\n" +
-                    "点击确认即可\n")
-                    .// 提示内容
-                    setPositiveButton("我知道了",
-                    new DialogInterface.OnClickListener() {// 确定
+                    .setTitle("骚年，第一次吧！")
+                    .setMessage("第一次使用将释放配置文件\n" + "点击确认即可\n")
+                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface arg0,
-                                            int arg1) {
-                            // yes to do
-                            new ThreadeExc("", "Conf").start();
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            cachedThreadPool.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    doTask("", "Conf");
+                                }
+                            });
+                            sp.edit().putBoolean("FIRST", true).apply();
                         }
-                    }
-            ).create().show();
+                    })
+                    .setNegativeButton("我拒绝", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            sp.edit().putBoolean("FIRST", false).apply();
+                            finish();
+                        }
+                    })
+                    .create().show();
         }
 
-        onShowMenu(arcLayout);
 
     }
 
@@ -92,22 +97,52 @@ public class FloatMainService extends Activity implements View.OnClickListener {
 
         switch (v.getId()) {
             case R.id.center_item:
-                new ThreadeExc("4x1440+2x1824+gpu600.sh", "性能").start();
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        doTask("open_six.sh", "六核全开");
+                    }
+                });
                 break;
             case R.id.menu_one:
-                new ThreadeExc("2x600+gpu180.sh", "待机").start();
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        doTask("power_save.sh", "四核省电");
+                    }
+                });
                 break;
             case R.id.menu_two:
-                new ThreadeExc("4x960+gpu180.sh", "轻聊").start();
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        doTask("drug_v5.sh", "有毒V5");
+                    }
+                });
                 break;
             case R.id.menu_three:
-                new ThreadeExc("4x1440+gpu367.sh", "影音").start();
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        doTask("auto_four.sh", "智能四核");
+                    }
+                });
                 break;
             case R.id.menu_four:
-                new ThreadeExc("4x1440+2x960+gpu490.sh", "畅玩").start();
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        doTask("just_fun.sh", "智能畅玩");
+                    }
+                });
                 break;
             case R.id.menu_five:
-                new ThreadeExc("auto.sh", "动态").start();
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        doTask("auto_six.sh", "智能六核");
+                    }
+                });
                 break;
             default:
                 break;
@@ -119,145 +154,111 @@ public class FloatMainService extends Activity implements View.OnClickListener {
         this.finish();
     }
 
-    class ThreadeExc extends Thread {
-        private Thread t;
-        private String ModelName;
-        private String FileName;
-
-        ThreadeExc(String File, String Model) {
-            FileName = File;
-            ModelName = Model;
-        }
-
-        public void start() {
-            if (t == null) {
-                t = new Thread(this);
-                t.start();
-            }
-        }
-
-        public void run() {
-            try {
-                if(ModelName.equals("Conf"))
-                {
-                    ExtractFiles();
-                }else {
-                    InputStream is = getAssets().open(FileName);
-                    int lenght = is.available();
-                    byte[] buffer = new byte[lenght];
-                    is.read(buffer);
-                    String result = new String(buffer, "utf8");
-                    shell(result, ModelName);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void ExtractFiles() {
-            try {
-                //挂载系统读写
-                shell("mount -o remount,rw /system","Conf");
-                String datafile=getApplicationContext().getFilesDir().getAbsolutePath()+"/thermal-engine-8992.conf";
-
-                InputStream is = getAssets().open("thermal-engine-8992.conf"); ; //读入原文件
+    private void doTask(String file, String model) {
+        try {
+            if (model.equals("Conf")) {
+                ExtractFiles();
+            } else {
+                InputStream is = getAssets().open(file);
                 int lenght = is.available();
                 byte[] buffer = new byte[lenght];
                 is.read(buffer);
                 String result = new String(buffer, "utf8");
-                is.close();
-                //临时写文件到data区
-                File file = new File(datafile);
-                FileOutputStream fos = new FileOutputStream(file);
-                byte [] bytes = result.getBytes();
-                fos.write(bytes);
-                fos.close();
-                //更改权限
-                shell("chmod 644 "+datafile,"Conf");
-                //复制到system区
-                shell("cp "+datafile+" /system/etc","Conf");
-                //临时文件删除
-                file.delete();
+                shell(result, model);
             }
-            catch (Exception e) {
-                System.out.println("Sth Wrong with copy .conf");
-                e.printStackTrace();
-            }
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
-        private void shell(String cmd, String model) {
-            Process process = null;
-            DataOutputStream os = null;
-            DataInputStream is = null;
-            final String TAG = "V";
+
+    private void ExtractFiles() {
+        try {
+            //挂载系统读写
+            shell("mount -o remount,rw /system", "Conf");
+            String datafile = getApplicationContext().getFilesDir().getAbsolutePath() + "/thermal-engine-8992.conf";
+            InputStream is = getAssets().open("thermal-engine-8992.conf");
+            //读入原文件
+            int lenght = is.available();
+            byte[] buffer = new byte[lenght];
+            is.read(buffer);
+            String result = new String(buffer, "utf8");
+            is.close();
+            //临时写文件到data区
+            File file = new File(datafile);
+            FileOutputStream fos = new FileOutputStream(file);
+            byte[] bytes = result.getBytes();
+            fos.write(bytes);
+            fos.close();
+            //更改权限
+            shell("chmod 644 " + datafile, "Conf");
+            //复制到system区
+            shell("cp " + datafile + " /system/etc", "Conf");
+            //临时文件删除
+            file.delete();
+        } catch (Exception e) {
+            System.out.println("Sth Wrong with copy .conf");
+            e.printStackTrace();
+        }
+    }
+
+    private void shell(String cmd, String model) {
+        Process process = null;
+        DataOutputStream os = null;
+        DataInputStream is = null;
+        final String TAG = "V";
+        try {
+            process = Runtime.getRuntime().exec("su");
+            os = new DataOutputStream(process.getOutputStream());
+            is = new DataInputStream(process.getInputStream());
+            os.writeBytes(cmd + " \n");  //这里可以执行具有root 权限的程序了
+            os.writeBytes(" exit \n");
+            os.flush();
+            process.waitFor();
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error - Here is what I know:" + e.getMessage());
+        } finally {
             try {
-                process = Runtime.getRuntime().exec("su");
-                os = new DataOutputStream(process.getOutputStream());
-                is = new DataInputStream(process.getInputStream());
-                os.writeBytes(cmd + " \n");  //这里可以执行具有root 权限的程序了
-                os.writeBytes(" exit \n");
-                os.flush();
-                process.waitFor();
-            } catch (Exception e) {
-                Log.e(TAG, "Unexpected error - Here is what I know:" + e.getMessage());
-            } finally {
-                try {
-                    if (os != null) {
-                        os.close();
-                    }
-                    if (is != null) {
-                        BufferedReader bufferedReader = new BufferedReader(
-                                new InputStreamReader(is,
-                                        "utf-8"));
-                        String line;
-                        String s = "";
-                        while ((line = bufferedReader.readLine()) != null) {
-                            s += line;
-                        }
-                        if (s.length() >= 3) {
-                            if (!model.equals("Conf")) {
-                                Looper.prepare();
-                                Toast.makeText(getApplicationContext(), model + "模式切换成功", Toast.LENGTH_LONG).show();
-                                //结束进程
-                                Thread.sleep(1000);
-                                FloatMainService.this.finish();
-                                Looper.loop();
 
-                            }
-                        } else {
-                            if (!model.equals("Conf")) {
-                                Looper.prepare();
-                                Toast.makeText(getApplicationContext(), model + "模式切换失败", Toast.LENGTH_LONG).show();
-                                //结束进程
-                                Thread.sleep(1000);
-                                FloatMainService.this.finish();
-                                Looper.loop();
-                            }
-                        }
-                        is.close();
-                    }
-                    process.destroy();
-
-                } catch (Exception e) {
+                if (os != null) {
+                    os.close();
                 }
+                if (is != null) {
+                    BufferedReader bufferedReader = new BufferedReader(
+                            new InputStreamReader(is,
+                                    "utf-8"));
+                    String line;
+                    String s = "";
+                    while ((line = bufferedReader.readLine()) != null) {
+                        s += line;
+                    }
+                    if (s.length() >= 3) {
+                        if (!model.equals("Conf")) {
+                            Looper.prepare();
+                            Toast.makeText(getApplicationContext(), model + "模式切换成功", Toast.LENGTH_LONG).show();
+                            Looper.loop();
+//                            //延迟一秒退出
+//                            Thread.sleep(1000);
+                            MainAct.this.finish();
+                        }
+                    } else {
+                        if (!model.equals("Conf")) {
+                            Looper.prepare();
+                            Toast.makeText(getApplicationContext(), model + "模式切换失败", Toast.LENGTH_LONG).show();
+                            Looper.loop();
+//                            //延迟一秒退出
+//                            Thread.sleep(1000);
+                            MainAct.this.finish();
+                        }
+                    }
+                    is.close();
+                    process.destroy();
+                }
+            } catch (Exception e) {
+                Log.d(TAG, "shell: " + e);
             }
-
         }
-
-
     }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     private void onShowMenu(View v) {
         int x = (v.getLeft() + v.getRight()) / 2;
@@ -282,7 +283,7 @@ public class FloatMainService extends Activity implements View.OnClickListener {
 
         Animator revealAnim = createCircularReveal(menuLayout, cx, cy, startRadius, endRadius);
         revealAnim.setInterpolator(new AccelerateDecelerateInterpolator());
-        revealAnim.setDuration(50);
+        revealAnim.setDuration(90);
 
         animList.add(revealAnim);
         animList.add(createShowItemAnimator(centerItem));
@@ -295,6 +296,7 @@ public class FloatMainService extends Activity implements View.OnClickListener {
         animSet.playSequentially(animList);
         animSet.start();
     }
+
 
     private void hideMenu(int cx, int cy, float startRadius, float endRadius) {
         List<Animator> animList = new ArrayList<>();
@@ -317,9 +319,11 @@ public class FloatMainService extends Activity implements View.OnClickListener {
         });
 
         animList.add(revealAnim);
+
         AnimatorSet animSet = new AnimatorSet();
         animSet.playSequentially(animList);
         animSet.start();
+
     }
 
     private Animator createShowItemAnimator(View item) {
@@ -340,7 +344,7 @@ public class FloatMainService extends Activity implements View.OnClickListener {
         );
 
         anim.setInterpolator(new DecelerateInterpolator());
-        anim.setDuration(50);
+        anim.setDuration(80);
         return anim;
     }
 
@@ -367,7 +371,6 @@ public class FloatMainService extends Activity implements View.OnClickListener {
         });
         anim.setDuration(120);
         return anim;
-
     }
 
     private Animator createCircularReveal(final ClipRevealFrame view, int x, int y, float startRadius, float endRadius) {
@@ -396,9 +399,7 @@ public class FloatMainService extends Activity implements View.OnClickListener {
 
             }
         });
-//        }
         return reveal;
     }
-
 
 }

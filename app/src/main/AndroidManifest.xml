@@ -1,16 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lckiss.floatMi4c">
+    package="com.lckiss.mi4cfloat">
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/myTransparent">
-        <activity
-            android:name="com.lckiss.floatMi4c.FloatMainService"
-            android:label="@string/app_name">
+        android:supportsRtl="true"
+        android:theme="@style/MyDialog">
+        <activity android:name=".MainAct">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
